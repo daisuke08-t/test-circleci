@@ -53,9 +53,9 @@ jobs:
 #      - run: curl -X GET http://localhost:8080/
       - aws-cli/install
       - deploy
-      - run: aws ecr get-login-password --region AWS_DEFAULT_REGION | docker login --username AWS --password-stdin AWS_ECR_ACCOUNT_URL
-      - run: docker tag spring-docker-todolist3:0.0.1 AWS_ECR_ACCOUNT_URL/spring-docker-todolist3:0.0.1
-      - run: docker push AWS_ECR_ACCOUNT_URL/spring-docker-todolist3:0.0.1
+      - run: aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ECR_ACCOUNT_URL}
+      - run: docker tag spring-docker-todolist3:0.0.1 ${AWS_ECR_ACCOUNT_URL}/spring-docker-todolist3:0.0.1
+      - run: docker push ${AWS_ECR_ACCOUNT_URL}/spring-docker-todolist3:0.0.1
 #      - aws-ecs/deploy-service-update:
 #        family: AWS_FARGATE_TASK_NAME
 #        service-name: AWS_FARGATE_SERVICE_NAME
