@@ -1,4 +1,8 @@
 version: 2
+orbs:
+  aws-ecr: circleci/aws-ecr@1.0.0
+  aws-ecs: circleci/aws-ecs@0.0.6
+
 jobs:
   build:
     docker:
@@ -32,5 +36,14 @@ jobs:
       - run: ./gradlew build
       - run: sudo ls ./build/libs/
       - run: docker image build -t spring-docker-demo:0.0.1 ./
-      - run: docker run -it -p 8080:8080 spring-docker-demo:0.0.1
-      - run: curl -X GET http://localhost:8080/
+#      - run: docker run -it -p 8080:8080 spring-docker-demo:0.0.1
+#      - run: curl -X GET http://localhost:8080/
+      - run: aws ecr get-login-password --region AWS_REGION | docker login --username AWS --password-stdin AWS_ECR_ACCOUNT_URL
+      - run: docker tag spring-docker-todolist3:0.0.1 AWS_ECR_ACCOUNT_URL/spring-docker-todolist3:0.0.1
+      - run: docker push AWS_ECR_ACCOUNT_URL/spring-docker-todolist3:0.0.1
+      aws-ecs/deploy-service-update:
+        family: AWS_FARGATE_TASK_NAME
+        service-name: AWS_FARGATE_SERVICE_NAME
+        cluster-name: AWS_FARGATE_CLUSTER_NAME
+        container-image-name-updates: 'container=spring-docker-todolist3,image-and-tag=${AWS_ECR_ACCOUNT_URL}/spring-docker-todolist3:0.0.1'
+
