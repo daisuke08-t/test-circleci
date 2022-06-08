@@ -30,6 +30,7 @@ jobs:
           docker_layer_caching: true
 
       - run: ./gradlew build
+      - run: sudo ls ./build/libs/
       - run: docker image build -t spring-docker-demo:0.0.1 ./
       - run: docker run -it -p 8080:8080 spring-docker-demo:0.0.1
       - run: curl -X GET http://localhost:8080/
