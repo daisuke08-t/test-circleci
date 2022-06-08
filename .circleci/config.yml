@@ -39,6 +39,17 @@ jobs:
       - run: docker image build -t spring-docker-demo:0.0.1 ./
 #      - run: docker run -it -p 8080:8080 spring-docker-demo:0.0.1
 #      - run: curl -X GET http://localhost:8080/
+      parameters:
+        aws-access-key-id:
+          default: AWS_ACCESS_KEY_ID
+          type: env_var_name
+        aws-region:
+          default: AWS_REGION
+          type: env_var_name
+        aws-secret-access-key:
+          default: AWS_SECRET_ACCESS_KEY
+          type: env_var_name
+
       - run: aws ecr get-login-password --region AWS_REGION | docker login --username AWS --password-stdin AWS_ECR_ACCOUNT_URL
       - run: docker tag spring-docker-todolist3:0.0.1 AWS_ECR_ACCOUNT_URL/spring-docker-todolist3:0.0.1
       - run: docker push AWS_ECR_ACCOUNT_URL/spring-docker-todolist3:0.0.1
